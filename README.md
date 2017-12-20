@@ -3,7 +3,7 @@ Sounds an alarm when a Twitch stream goes live.
 
 ### Requirements
 * [Python 3.6](https://www.python.org/downloads/) or higher
-* [python-twitch-client](https://github.com/tsifrer/python-twitch-client)
+* [requetes](http://docs.python-requests.org/en/master/)
 * [pyaudio](https://people.csail.mit.edu/hubert/pyaudio/)
 
 ### Configuration
@@ -26,7 +26,8 @@ used for configuration of the program. It has the following format:
 [here](https://dev.twitch.tv/dashboard/apps).
 * channels - A list of the names of channels for which an alarm will sound when
 live.
-* frequency - The interval between live checks in seconds.
+* frequency - The interval between live checks in seconds. Note the endpoint
+for streams has a rate limit of 30 requests per minute.
 * sound - Path to a `wav` audio file that will be used as the alarm sound.
 
 ### Usage
