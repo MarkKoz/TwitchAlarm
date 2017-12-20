@@ -1,8 +1,11 @@
 from typing import Dict
+import datetime
 import json
 import time
 
+from dateutil import parser
 import requests
+
 from Audio import WavePlayer
 
 config = dict()
@@ -42,7 +45,8 @@ def checkLive(channels):
 
     while not live:
         time.sleep(config["frequency"])
-        print("Checking if live...")
+        timestamp = datetime.datetime.now().replace(microsecond = 0).isoformat()
+        print(f"[{timestamp}] Checking if live...")
 
         try:
             streams = getStreams(channels)
@@ -52,15 +56,18 @@ def checkLive(channels):
                 onLive(data)
                 live = True
                 break
-        except requests.exceptions.HTTPError as e:
+        except (requests.exceptions.HTTPError,
+                requests.exceptions.Timeout) as e:
             print(e.args[0])
             continue
 
 def onLive(streams):
     for s in streams:
+        timestamp = datetime.datetime.now().replace(microsecond = 0).isoformat()
         name = getDisplayName(s["user_id"])
-        started = s["started_at"]
-        print(f"{name} went live at {started}")
+        started = parser.parse(s["started_at"]).\
+            astimezone(tz = None).replace(tzinfo = None).isoformat()
+        print(f"[{timestamp}] {name} went live at {started}")
 
     playAlarm()
 

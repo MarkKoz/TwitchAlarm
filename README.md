@@ -3,8 +3,9 @@ Sounds an alarm when a Twitch stream goes live.
 
 ### Requirements
 * [Python 3.6](https://www.python.org/downloads/) or higher
-* [requetes](http://docs.python-requests.org/en/master/)
+* [requests](http://docs.python-requests.org/en/master/)
 * [pyaudio](https://people.csail.mit.edu/hubert/pyaudio/)
+* [python-dateutil](https://dateutil.readthedocs.io/en/stable/)
 
 ### Configuration
 A `JSON` file named `Configuration.json` in the same directory as `Main.py` is
