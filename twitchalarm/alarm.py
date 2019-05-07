@@ -1,28 +1,34 @@
 import datetime
 import time
 
-from dateutil import parser
 import requests
+from dateutil import parser
 
 from twitchalarm.audio import WavePlayer
 
-urlBase = "https://api.twitch.tv/helix/"
+TWITCH_API = "https://api.twitch.tv/helix"
 
-def getStreams(channels, client_id):
-    response = requests.get(f"{urlBase}streams",
-                            params = {
-                                "type": "live",
-                                "user_login": [c for c in channels]
-                            },
-                            headers = {"Client-ID": client_id})
+
+def get_streams(channels, client_id):
+    response = requests.get(
+        f"{TWITCH_API}/streams",
+        params={
+            "type": "live",
+            "user_login": channels
+        },
+        headers={"Client-ID": client_id}
+    )
     response.raise_for_status()
 
     return response.json()
 
-def getDisplayName(userID, client_id):
-    response = requests.get(f"{urlBase}users",
-                            params = {"id": userID},
-                            headers = {"Client-ID": client_id})
+
+def get_display_name(user_id, client_id):
+    response = requests.get(
+        f"{TWITCH_API}/users",
+        params={"id": user_id},
+        headers={"Client-ID": client_id}
+    )
     response.raise_for_status()
     data = response.json()["data"]
 
@@ -32,38 +38,40 @@ def getDisplayName(userID, client_id):
 
     return data[0]["display_name"]
 
-def checkLive(config):
+
+def poll_stream_status(config):
     live = False
 
     while not live:
         time.sleep(config.frequency)
-        timestamp = datetime.datetime.now().replace(microsecond = 0).isoformat()
+        timestamp = datetime.datetime.now().replace(microsecond=0).isoformat()
         print(f"[{timestamp}] Checking if live...")
 
         try:
-            streams = getStreams(config.channels, config.client_id)
+            streams = get_streams(config.channels, config.client_id)
             data = streams["data"]
 
             if data:
-                onLive(data, config.client_id, config.sound)
+                on_live(data, config.client_id, config.sound)
                 live = True
                 break
-        except (requests.exceptions.HTTPError,
-                requests.exceptions.Timeout) as e:
+        except (requests.HTTPError, requests.Timeout) as e:
             print(e.args[0])
             continue
 
-def onLive(streams, client_id, sound):
+
+def on_live(streams, client_id, sound):
     for s in streams:
-        timestamp = datetime.datetime.now().replace(microsecond = 0).isoformat()
-        name = getDisplayName(s["user_id"], client_id)
-        started = parser.parse(s["started_at"]).\
-            astimezone(tz = None).replace(tzinfo = None).isoformat()
+        timestamp = datetime.datetime.now().replace(microsecond=0).isoformat()
+        name = get_display_name(s["user_id"], client_id)
+        started = parser.parse(s["started_at"])
+        started = started.astimezone(tz=None).replace(tzinfo=None).isoformat()
         print(f"[{timestamp}] {name} went live at {started}")
 
-    playAlarm(sound)
+    play_alarm(sound)
 
-def playAlarm(sound_path):
+
+def play_alarm(sound_path):
     sound = WavePlayer(sound_path)
     sound.play()
 

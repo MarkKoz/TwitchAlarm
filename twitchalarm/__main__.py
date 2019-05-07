@@ -1,8 +1,8 @@
+import os
 from argparse import ArgumentParser
 from pathlib import Path
-import os
 
-from twitchalarm.alarm import checkLive
+from twitchalarm.alarm import poll_stream_status
 
 parser = ArgumentParser(
     prog="twitch-alarm",
@@ -33,4 +33,4 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-checkLive(args)
+poll_stream_status(args)
