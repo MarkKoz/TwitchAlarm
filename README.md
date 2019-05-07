@@ -8,7 +8,7 @@ Sounds an alarm when a Twitch stream goes live.
 * [python-dateutil](https://dateutil.readthedocs.io/en/stable/)
 
 ### Configuration
-A `JSON` file named `Configuration.json` in the same directory as `Main.py` is
+A `JSON` file named `configuration.json` in the same directory as `main.py` is
 used for configuration of the program. It has the following format:
 
 ```json
@@ -32,6 +32,6 @@ for streams has a rate limit of 30 requests per minute.
 * sound - Path to a `wav` audio file that will be used as the alarm sound.
 
 ### Usage
-Run `Main.py`. If a channel goes live, an alarm will sound. The alarm will stop
+Run `main.py`. If a channel goes live, an alarm will sound. The alarm will stop
 after any key + <kbd>Enter</kbd> is pressed and the program will close; re-run
 `Main.py` to restart the program.

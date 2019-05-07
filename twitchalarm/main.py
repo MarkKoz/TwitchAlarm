@@ -6,7 +6,7 @@ import time
 from dateutil import parser
 import requests
 
-from Audio import WavePlayer
+from audio import WavePlayer
 
 config = dict()
 
